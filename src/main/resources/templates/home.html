@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sample Project Home Page</title>
+</head>
+<body>
+<h1>Here are your games.</h1>
+<form method="post" action="/add-game">
+    <input type="text" name="name" placeholder="Name" />
+    <input type="text" name="genre" placeholder="Genre" />
+    <input type="text" name="releaseYear" placeholder="Release Year" />
+    <input type="submit" />
+</form>
+
+<ul>
+    {{#games}}
+    <li>{{name}} | {{genre}} | {{releaseYear}}</li>
+    {{/games}}
+</ul>
+</body>
+</html>
