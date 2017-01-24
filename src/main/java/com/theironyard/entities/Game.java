@@ -3,20 +3,26 @@ package com.theironyard.entities;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "games")
+@Table(name = "MastermindGame")
 public class Game {
     @Id
     @GeneratedValue
     int id;
 
     @Column(nullable = false)
-    String name;
+            int[] guesses;
 
     @Column(nullable = false)
-    int releaseYear;
+            int[] checks;
 
-    @Column(nullable = false)
-    String genre;
+    public Game() {
+    }
+
+    public Game(int id, int[] guesses, int[] checks) {
+        this.id = id;
+        this.guesses = guesses;
+        this.checks = checks;
+    }
 
     public int getId() {
         return id;
@@ -26,27 +32,19 @@ public class Game {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public int[] getGuesses() {
+        return guesses;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setGuesses(int[] guesses) {
+        this.guesses = guesses;
     }
 
-    public int getReleaseYear() {
-        return releaseYear;
+    public int[] getChecks() {
+        return checks;
     }
 
-    public void setReleaseYear(int releaseYear) {
-        this.releaseYear = releaseYear;
-    }
-
-    public String getGenre() {
-        return genre;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
+    public void setChecks(int[] checks) {
+        this.checks = checks;
     }
 }
