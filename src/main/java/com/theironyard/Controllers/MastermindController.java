@@ -9,6 +9,7 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 @RestController
 public class MastermindController {
@@ -30,27 +31,39 @@ public class MastermindController {
         return (int)(Math.random() * 8) + 1;
     }
 
-
     public static int[] check(int[] answerArray, int[] guessArray) {
         answerArray = Arrays.copyOf(answerArray, answerArray.length);
 
-        int[] result = new int[answerArray.length];
+        int[] results = new int[answerArray.length];
 
-        for (int i = 0; i < result.length; i++) {
+        for (int i = 0;i < results.length;i++) {
             if (answerArray[i] == guessArray[i]) {
-                result[i] = 2;
+                results[i] = 2;
                 answerArray[i] = 0;
-                continue;
-            }
-
-            int answerIndex = Arrays.binarySearch(answerArray, guessArray[i]);
-
-            if(answerIndex > -1) {
-                result[i] = 1;
-                answerArray[answerIndex] = 0;
             }
         }
-        return result;
+
+        for (int i = 0;i < results.length;i++) {
+            int actualIndex = findIndexOfValue(answerArray, guessArray[i]);
+
+            if (answerArray[i] > 0 && actualIndex > -1) {
+                results[i] = 1;
+                answerArray[actualIndex] = 0;
+            }
+        }
+
+        return results;
+    }
+
+
+    private static int findIndexOfValue(int[] array, int value) {
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] == value) {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     @CrossOrigin
@@ -62,21 +75,21 @@ public class MastermindController {
 
     @CrossOrigin
     @RequestMapping(path = "/guess", method = RequestMethod.POST)
-    public Iterable<Game> guessCheck(@RequestBody int [] guess) {
+    public List<Game> guessCheck(@RequestBody int [] guess) {
         Game NewAnswer = games.findOne(1);
         Game NewGuess = new Game();
         int [] response = check(NewAnswer.getGuesses(), guess);
         NewGuess.setGuesses(guess);
         NewGuess.setChecks(response);
         games.save(NewGuess);
-        return games.findAll();
+        return (List)games;
     }
 
     @CrossOrigin
     @RequestMapping(path = "/new-game", method = RequestMethod.GET)
     void newGame(HttpServletResponse response) throws IOException {
         games.deleteAll();
-        response.sendRedirect("http://localhost:8080");
+        response.sendRedirect("https://hidden-sands-13571.herokuapp.com/");
     }
 
 }
